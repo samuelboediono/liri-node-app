@@ -1,42 +1,42 @@
 var fs = require('fs');
-var twitter = require('twitter');
-var spotify = require('spotify');
-var omdb = require('omdb');
+var Twitter = require('twitter');
+var spotify = require('node-spotify-api');
 var request = require('request');
 var input1 = process.argv[2];
 var input2 = process.argv.splice(3).join(" ");
+
+var keys = require('./keys');
 
 function log() {
 
     fs.appendFile('./log.txt', input1 + " " + input2 + ", ", function(err) {
 
-        // If an error was experienced we say it.
         if (err) {
             console.log(err);
         }
-
-        // If no error is experienced, we'll log the phrase "Content Added" to our node console.
         else {
-            // console.log("Content Added!");
+            console.log("Content Added!");
         }
 
     });
 };
 
-var keys = require('./keys.js');
-
-var client = new Twitter(keys.twitterKeys);
-
-var params = {
-    screen_name: 'samuelboediono',
-    count: 20
-};
 
 run();
 
 function run() {
+	var client = new Twitter(keys.twitterKeys);
+	// console.log(client)
 	if (input1 === "my-tweets") {
-		client.get('statuses/user_timeline', params, function(error, tweets, response) {
+	
+	var params = {
+	    // screen_name: 'samuelboediono',
+	    screen_name: 'CNN'
+	    
+	};
+	console.log(params);
+	client.get('statuses/user_timeline', params, function(error, tweets, response) {
+			// console.log(client);
 			if (!error) {
 				console.log('');
 				console.log("Last 20 Tweets: ");
@@ -81,8 +81,9 @@ function run() {
 		if (input2 < 1) {
 			input2 = "Mr. Nobody";
 		};
-
-		request("http://www.omdbapi.com/?t=" + input2 + "&y=&plot=short&r=json&tomatoes=true", function(error, response, body) {
+		
+		request("https://www.omdbapi.com/?t=" + input2 + "&y=&plot=short&apikey=40e9cece", function(error, response, body) {
+		
 			if (!error && response.statusCode === 200) {
 				console.log('');
 				console.log("OMDB Movie Information: ");
